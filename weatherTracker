@@ -7,7 +7,7 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-apikey="dc26c360ccae212a"
+apikey="request your own from wunderground its free"
 
 weather=`curl -s \
         "https://api.wunderground.com/api/$apikey/conditions/q/$1.xml"`
