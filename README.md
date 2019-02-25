@@ -1,2 +1,2 @@
-# ProjectLinux
-Current and Completed Linux Projects
+#Bash Scripting Projects
+Current and Completed Bash Projects
