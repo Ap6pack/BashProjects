@@ -2,9 +2,9 @@
 echo updating....
 
 ifconfig eth0 down
-macchanger -a -A eth0
-macchanger -a -A eth0
-macchanger -a -A eth0
+macchanger -r eth0
+macchanger -r eth0
+macchanger -r eth0
 ifconfig eth0 up
 sleep 5s
 
