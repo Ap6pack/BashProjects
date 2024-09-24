@@ -1,0 +1,178 @@
+
+# MN Personal func's
+function sshk() {
+    echo ""
+    echo "<dbug func enabled>"
+    echo ""
+	echo "The number of positional parameter : $#"
+    echo "All parameters or arguments passed to the function: '$@'"
+
+    echo ""
+
+	if [ $# != 1 ]; then
+		echo -e "\nOnly one ARG please!  Call this script with ${0} <IP/hostname>\n"
+	else
+		createlogsdir;
+		y=`date`
+		x=$1 ;
+		echo "Now connecting to host: {x} at {y}\n" >> ./logs/${x}_interact.txt ;
+		sshk $x | tee -a ./logs/${x}_interact.txt ;
+	fi
+}
+export -f sshk
+
+function sshkl() {
+    echo ""
+    echo "<dbug func enabled>"
+    echo ""
+	echo "The number of positional parameter : $#"
+    echo "All parameters or arguments passed to the function: '$@'"
+    echo ""
+
+	if [ $# != 1 ]; then
+		echo -e "\nOnly one ARG please!  Call this script with ${0} <IP/hostname>\n"
+	else
+		createlogsdir;
+		y=`date`
+		x=$1 ;
+		echo -e "\nNow connecting to host: ${x} at ${y}\n\n" >> ./logs/${x}_interact.txt ;
+                #ssh $x echo -e "set -o vi\nalias t=\"ls -lt\"\n" > mn;
+                scp ~/m $x: ;
+                export TERM=xterm ;
+		# sshk $x | tee -a ./logs/${x}_interact.txt ; 
+		sshk -t $x 'PROMPT_COMMAND="source ~/m
+                                           unset PROMPT_COMMAND
+                                           " exec bash ' | tee -a ./logs/${x}_interact.txt ;
+	fi
+}
+
+export -f sshkl
+
+function sshj() {
+    echo ""
+    echo "<dbug func enabled>"
+    echo ""
+	echo "The number of positional parameter : $#"
+    echo "All parameters or arguments passed to the function: '$@'"
+    echo ""
+
+	if [[ $# == 2 ]]; then
+                x=$1
+                y=$2
+		ssh $x $y
+	elif [[ $# == 3 ]]; then
+                y=$2
+                z=$3
+		ssh $x $y $z
+	elif [[ $# == 1 ]]; then
+		createlogsdir;
+		y=`date`
+		x=$1 ;
+		echo -e "\nNow connecting to host: ${x} at ${y}\n\n" >> ./logs/${x}_interact.txt ;
+		ssh $x | tee -a ./logs/${x}_interact.txt ;
+	fi
+}
+
+
+export -f sshj
+
+function sshl() {
+    echo ""
+    echo "<dbug func enabled>"
+    echo ""
+	echo "The number of positional parameter : $#"
+    echo "All parameters or arguments passed to the function: '$@'"
+    echo ""
+
+	if [[ $# == 2 ]]; then
+                x=$1
+                y=$2
+		ssh $x $y
+	elif [[ $# == 3 ]]; then
+                y=$2
+                z=$3
+		ssh $x $y $z
+	elif [[ $# == 1 ]]; then
+		createlogsdir;
+		y=`date`
+		x=$1 ;
+		echo -e "\nNow connecting to host: ${x} at ${y}\n\n" >> ./logs/${x}_interact.txt ;
+                #ssh $x echo -e "set -o vi\nalias t=\"ls -lt\"\n" > mn;
+                scp ~/m $x: ;
+                scp ~/.vimrc $x: ;
+                export TERM=xterm;
+		# ssh $x | tee -a ./logs/${x}_interact.txt ;
+		ssh -t $x 'PROMPT_COMMAND="source ~/m
+                                           unset PROMPT_COMMAND
+                                           " exec bash ' | tee -a ./logs/${x}_interact.txt ;
+	fi
+}
+
+
+export -f sshl
+
+function hi() {
+    # set -xT
+    x=$1
+    echo ""
+    echo "<dbug func enabled>"
+    echo ""
+    echo "The number of positional parameter : $#"
+    echo "All parameters or arguments passed to the function: '$@'"
+    echo ""
+
+    if [[ $# == 0 ]]; then
+        history | tail -n 100
+    elif [[ $# == 1 ]]; then
+    	history | grep $x
+    else
+    	echo -e "Optional one arg with is a pattern to grep through history with"
+    fi
+    # set +xT
+}
+
+export -f hi
+
+
+function createlogsdir() {
+	if [ -d ./logs ];
+	then
+		echo "I see we have a ./logs dir already ... ";
+	else
+		echo "Creating ./logs dir ... " && mkdir logs;
+	fi;
+}
+
+export -f createlogsdir
+
+
+function stamp() {
+	if [ -d ./logs ];
+	then
+		echo "I see we have a ./logs dir already ... ";
+		echo "rotating ...";
+		x=`date "+%Y%m%d_%H%M"`
+		mv ./logs ./${x}_logs && echo "moving ./logs => ./${x}_logs"
+		echo ""
+		mkdir logs
+	else
+		echo "Creating ./logs dir ... " && mkdir logs;
+	fi;
+}
+
+export -f stamp
+
+
+function dpkgq() {  
+    dpkg-query --list |                  \
+    awk '$1 == "ii"                      \
+    {                                    \
+      F = $2; gsub( /:(.*)?/, "", F ) ;  \
+      gsub( /\n/, "", F );               \
+      gsub( /:/, "", F );                \
+      print F                            \
+    }'
+}
+
+export -f dpkgq
+
